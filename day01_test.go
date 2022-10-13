@@ -7,6 +7,7 @@ import (
 )
 
 var wg sync.WaitGroup
+var lock sync.Mutex
 
 func TestDay01(t *testing.T) {
 	a := [][]int{
@@ -18,8 +19,9 @@ func TestDay01(t *testing.T) {
 	wg.Add(len(a))
 	for i := 0; i < len(a); i++ {
 		go func(i int) {
-
+			lock.Lock()
 			sum += addSlice1(a[i])
+			lock.Unlock()
 			wg.Done()
 		}(i)
 
@@ -53,9 +55,12 @@ func TestDay02(t *testing.T) {
 		go func(i int) {
 			array := make([]int, 0)
 			for j := 0; j < n && (i*n+j) < len(a); j++ {
+
 				array = append(array, a[i*n+j]...)
 			}
+			lock.Lock()
 			sum += addSlice1(array)
+			lock.Unlock()
 			wg.Done()
 		}(i)
 	}
@@ -109,9 +114,12 @@ func TestDay03(t *testing.T) {
 			if i == 4 && len(a)%5 != 0 {
 				k := i % 5
 				for j := 0; j < k; j++ {
+
 					array = append(array, a[n*5+j]...)
 				}
+				lock.Lock()
 				sum += addSlice1(array)
+				lock.Unlock()
 			}
 			wg.Done()
 		}(i)
