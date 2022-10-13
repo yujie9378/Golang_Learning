@@ -15,11 +15,23 @@ golang的并发控制基本操作
 var data [][]int
 */
 func main() {
-	a := [][]int{{1, 2, 3, 4, 5, 6}, {7, 8, 9, 10, 11, 12}, {13, 14, 15, 16, 17, 18}, {19, 20, 21, 22, 23, 24}}
+	a := [][]int{
+		{1, 2, 3, 4, 5, 6},
+		{7, 8, 9, 10, 11, 12},
+		{13, 14, 15, 16, 17, 18},
+		{19, 20, 21, 22, 23, 24}}
 	addslice1(a)
 }
 
-func addslice(slice [][]int) int {
+func addSlice(a []int) int {
+	var result int
+	for _, v := range a {
+		result = result + v
+	}
+	return result
+}
+
+func addslices(slice [][]int) int {
 	n := len(slice)
 	m := len(slice[0])
 	sum := 0
