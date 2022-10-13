@@ -9,7 +9,7 @@ import (
 var wg sync.WaitGroup
 var lock sync.Mutex
 
-func TestDay01(t *testing.T) {
+func TestDay01_5(t *testing.T) {
 	a := [][]int{
 		{1, 2, 3, 4, 5, 6},
 		{7, 8, 9, 10, 11, 12},
@@ -21,8 +21,8 @@ func TestDay01(t *testing.T) {
 		go func(i int) {
 			lock.Lock()
 			sum += addSlice1(a[i])
-			lock.Unlock()
-			wg.Done()
+			defer lock.Unlock()
+			defer wg.Done()
 		}(i)
 
 	}
@@ -30,7 +30,7 @@ func TestDay01(t *testing.T) {
 	fmt.Println(sum)
 	//addSlice(a)
 }
-func TestDay02(t *testing.T) {
+func TestDay01_2(t *testing.T) {
 	a := [][]int{
 		{1, 2, 3, 4, 5, 6},
 		{7, 8, 9, 10, 11, 12},
@@ -60,8 +60,8 @@ func TestDay02(t *testing.T) {
 			}
 			lock.Lock()
 			sum += addSlice1(array)
-			lock.Unlock()
-			wg.Done()
+			defer lock.Unlock()
+			defer wg.Done()
 		}(i)
 	}
 	wg.Wait()
@@ -78,7 +78,7 @@ func addSlice1(a []int) int {
 	return result
 
 }
-func TestDay03(t *testing.T) {
+func TestDay01_3(t *testing.T) {
 	a := [][]int{
 		{1, 2, 3, 4, 5, 6},
 		{7, 8, 9, 10, 11, 12},
@@ -119,11 +119,50 @@ func TestDay03(t *testing.T) {
 				}
 				lock.Lock()
 				sum += addSlice1(array)
-				lock.Unlock()
+				defer lock.Unlock()
 			}
-			wg.Done()
+			defer wg.Done()
 		}(i)
 	}
 	wg.Wait()
 	fmt.Println(sum)
+}
+func TestDay01_4(t *testing.T) {
+	a := [][]int{
+		{1, 2, 3, 4, 5, 6},
+		{7, 8, 9, 10, 11, 12},
+		{13, 14, 15, 16, 17, 18},
+		{19, 20, 21, 22, 23, 24},
+		{1, 2, 3, 4, 5, 6},
+		{7, 8, 9, 10, 11, 12},
+		{13, 14, 15, 16, 17, 18},
+		{19, 20, 21, 22, 23, 24},
+		{1, 2, 3, 4, 5, 6},
+		{7, 8, 9, 10, 11, 12},
+		{13, 14, 15, 16, 17, 18},
+		{19, 20, 21, 22, 23, 24},
+	}
+	sum := 0
+	limit := make(chan int, 5)
+	wg.Add(len(a))
+	for index := range a {
+		limit <- 1
+		go func(idx int) {
+			lock.Lock()
+			sum += addSlice(a[idx])
+			defer lock.Unlock()
+			defer wg.Done()
+			<-limit
+		}(index)
+	}
+	wg.Wait()
+	fmt.Println("sum", sum)
+
+}
+func addSlice(a []int) int {
+	var result int
+	for _, v := range a {
+		result = result + v
+	}
+	return result
 }
