@@ -14,7 +14,7 @@ import (
 golang的并发控制基本操作
 var data [][]int
 */
-func main() {
+func main1() {
 	a := [][]int{
 		{1, 2, 3, 4, 5, 6},
 		{7, 8, 9, 10, 11, 12},
@@ -73,22 +73,31 @@ func addslice1(slice [][]int) {
 				ch[N-1] <- slice[r][c]
 			}
 		}
+		close(ch[i])
 
 	}
-	sum := 0
+	//sum := 0
 	for i := 0; i < N; i++ {
 		//fmt.Println( <-ch[i])
 		worker(ch[i])
 
 	}
-	fmt.Println(sum)
+	time.Sleep(10 * time.Second)
+	fmt.Println("sum", sum1)
 
 }
-func worker(ch chan int) int {
-	sum := 0
+
+var sum1 int
+
+func worker(ch chan int) {
+
 	for i := range ch {
+
 		fmt.Println(i)
-		sum += i
+		sum1 += i
+
 	}
-	return sum
+
+	//	close(ch)
+
 }
