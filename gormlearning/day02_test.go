@@ -1,4 +1,4 @@
-package main
+package gormlearning
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type User struct {
+type User1 struct {
 	ID       int
 	Name     string
 	Age      int

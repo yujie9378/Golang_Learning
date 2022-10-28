@@ -159,10 +159,3 @@ func TestDay01_4(t *testing.T) {
 	fmt.Println("sum", sum)
 
 }
-func addSlice(a []int) int {
-	var result int
-	for _, v := range a {
-		result = result + v
-	}
-	return result
-}
