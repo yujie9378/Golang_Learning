@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
@@ -30,10 +32,15 @@ func TestWork_02(t *testing.T) {
 func TestWork_03(t *testing.T) {
 	r := gin.New()
 	r.Use(Logger())
-	r.GET("/logtest", func(c *gin.Context) {
+	r.POST("/logtest", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "success",
 		})
+		body := c.Request.Body
+		var b []byte
+		b, _ = ioutil.ReadAll(body)
+
+		fmt.Println("在处理函数里获得", string(b))
 
 	})
 	r.Run(":8082")
@@ -42,7 +49,11 @@ func TestWork_03(t *testing.T) {
 
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		log.Print("请求体", c.Request)
+		body := c.Request.Body
+		var b []byte
+		b, _ = ioutil.ReadAll(body)
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+		fmt.Println("在logger里获得", string(b))
 
 	}
 }
