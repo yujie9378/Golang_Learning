@@ -38,8 +38,10 @@ func TestWork_03(t *testing.T) {
 		})
 		body := c.Request.Body
 		var b []byte
-		b, _ = ioutil.ReadAll(body)
-
+		b, err := ioutil.ReadAll(body)
+		if err != nil {
+			c.AbortWithStatus(400)
+		}
 		fmt.Println("在处理函数里获得", string(b))
 
 	})
@@ -51,7 +53,11 @@ func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		body := c.Request.Body
 		var b []byte
-		b, _ = ioutil.ReadAll(body)
+		b, err := ioutil.ReadAll(body)
+		if err != nil {
+			c.AbortWithStatus(400)
+		}
+
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 		fmt.Println("在logger里获得", string(b))
 
